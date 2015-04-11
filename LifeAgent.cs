@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using GeneticAlgorithms;
@@ -151,7 +151,7 @@ public class LifeAgent : MonoBehaviour {
         this.age = lifespanTimer.CurrentTime;
 
         //determine if we're EOL
-        if(lifespanTimer.tick(Time.deltaTime))
+        if(lifespanTimer.Tick(Time.deltaTime))
         {
             return true;
         }
@@ -324,7 +324,7 @@ public class LifeAgent : MonoBehaviour {
                         if(potentialMate.IsFit)
                         {
                             ReproductionManager rm = MonoBehaviorFinder.Find<ReproductionManager>("ReproductionManager");
-                            rm.Reproduce(this.ID, potentialMate.ID, this.transform.position);
+                            rm.AgentReproduction(this.ID, potentialMate.ID, this.transform.position);
 
                             currentResources = 0;
                             target = null;
@@ -347,7 +347,7 @@ public class LifeAgent : MonoBehaviour {
     /// <returns><c>true</c> if this instance is time to refresh target; otherwise, <c>false</c>.</returns>
     bool IsTimeToRefreshTarget()
     {
-        if(targetRefreshTimer.tick(Time.deltaTime))
+        if(targetRefreshTimer.Tick(Time.deltaTime))
         {
             targetRefreshTimer = new Timer(this.targetRefreshTime);
             return true;

@@ -19,7 +19,7 @@ public class Timer : ITimer
 	float interval = 0f;
 
 	//the amount of time that has passed so far in this interval. 
-	float time = 0f;
+	float currentTime = 0f;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AssemblyCSharp.Timer"/> class.
@@ -28,7 +28,7 @@ public class Timer : ITimer
 	public Timer (float interval)
 	{
 		this.interval = interval;
-		this.time = 0f;
+		this.currentTime = 0f;
 	}
 
 	/// <summary>
@@ -36,13 +36,13 @@ public class Timer : ITimer
 	/// If the interval is complete, return true and reset. return false otherwise.
 	/// </summary>
 	/// <param name="deltaTime">Delta time.</param>
-	public bool tick (float deltaTime)
+	public bool Tick (float deltaTime)
 	{
-		this.time += deltaTime;
-		if (this.time >= this.interval) {
+		this.currentTime += deltaTime;
+		if (this.currentTime >= this.interval) {
 			//don't snip the time if we've gone over since last update
-			float extraTimePassed = this.time - this.interval;
-			this.time = extraTimePassed;
+			float extraTimePassed = this.currentTime - this.interval;
+			this.currentTime = extraTimePassed;
 			return true;
 		} else {
 			return false;
@@ -51,7 +51,11 @@ public class Timer : ITimer
 
 	public float CurrentTime {
 		get {
-			return this.time;
+			return this.currentTime;
+		}
+		private set
+		{
+			this.currentTime = value;
 		}
 	}
 
@@ -61,11 +65,16 @@ public class Timer : ITimer
 		}
 	}
 
+	public void ForceReset()
+	{
+		this.CurrentTime = 0;
+	}
+
 	///
 	//100*(time/interval) is the %complete
 	public float percentComplete ()
 	{
-		float percent = 100 * (this.time / this.interval);
+		float percent = 100 * (this.currentTime / this.interval);
 		return percent;
 	}
 

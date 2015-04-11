@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using GeneticAlgorithms;
 using AssemblyCSharp;
+
+
+/// <summary>
+/// The MonoBehavior that manages the population of Resource lifeforms
+/// </summary>
 public class ResourceManager : MonoBehaviour {
 
 	public GameObject resourcePrefab;
 
 
 	private ITimer resourceSpawnTimer;
-
 	private IIndexedPopulation resourcePopulation;
-
 	private int count;
 	
 	// Use this for initialization
@@ -28,6 +31,16 @@ public class ResourceManager : MonoBehaviour {
 			count++;
 
 		}
+	}
+
+	/// <summary>
+	/// Add a new individual to the population
+	/// </summary>
+	/// <param name="i">The index.</param>
+	public void Add(IIndividual i)
+	{
+		int id = i.Id;
+		this.resourcePopulation.add(id, i);
 	}
 
 	public IIndexedPopulation ResourcePopulation {
@@ -47,12 +60,12 @@ public class ResourceManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(resourceSpawnTimer.tick(Time.deltaTime))
+		/*if(resourceSpawnTimer.Tick(Time.deltaTime))
 		{
 			Vector3 pos = this.randomPosition();
 			this.InstantiateResource(pos);
 			count++;
-		}
+		}*/
 	}
 
 

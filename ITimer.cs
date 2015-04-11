@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public interface ITimer  {
 
-	bool tick(float deltaTime);
+	bool Tick(float deltaTime);
     float CurrentTime{get;}
 
 }

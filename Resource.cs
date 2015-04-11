@@ -6,7 +6,7 @@ using AssemblyCSharp;
 using UnityObjectFinders;
 public class Resource : MonoBehaviour {
 
-    private bool initialized;
+	private bool initialized = false;
     private SingleIntegerGenome genome;
     private float energy;
     private ITimer photosynthesisTimer;
@@ -60,6 +60,9 @@ public class Resource : MonoBehaviour {
 		get {
 			return energy;
 		}
+		private set {
+			this.energy = value;
+		}
 	}
 
 	public float EnergyNeeded {
@@ -75,12 +78,10 @@ public class Resource : MonoBehaviour {
 			int[] values = this.genome.getGeneIntegerValues();
 			if(values.Length >= 3)
 			{
-				this.photosynthesisTimer = new Timer(values[0] * 2f);
-				this.energyNeeded = (float)values[1] * 2f;
-				this.seedRadius = (float) values[2];
+				this.photosynthesisTimer = new Timer(values[0] *2f  + 1);
+				this.energyNeeded = (float)values[1] + 1;
+				this.seedRadius = (float) values[2] * 2f;
 			}
-
-
 			initialized = true;
 		}
 		else
@@ -103,14 +104,14 @@ public class Resource : MonoBehaviour {
 	void Update () {
 	   if(this.initialized)
         {
-			if(photosynthesisTimer.tick(Time.deltaTime))
+			if(photosynthesisTimer.Tick(Time.deltaTime))
 			{
 				energy++;
 			}
 
 			if(energy >= energyNeeded)
 			{
-				//this.Reproduce();
+				this.Reproduce();
 				energy = 0;
 			}
         }
@@ -143,58 +144,37 @@ public class Resource : MonoBehaviour {
 
 		}
 
-
-		foreach(GameObject g in inRange)
+		GameObject closest = null;
+		foreach(GameObject f in inRange)
 		{
+			if(closest == null)
+			{
+				closest = f;
+			}
 
-			Resource r = g.GetComponent<Resource>();
-			IGenome otherGenome = r.Genome;
-			IGenome[] parents = {this.genome, otherGenome};
-			IGenome child = crossover.crossover(parents, (new SingleIntegerGenomeFactory()));
-
-
-			Vector3 here = this.transform.position;
-			Vector3 random = new Vector3(gen.Next((int)this.seedRadius), 0, gen.Next((int)this.seedRadius));
-			Vector3 newLocation = here + random;
-
-			IIndividualFactory f = SimulationConstants.LifeAgentFactory;
-			IIndividual ri = f.construct(child);
-			Instantiator i = new Instantiator();
-			Prefabs p = MonoBehaviorFinder.Find<Prefabs>("Prefabs");
-
-			int key = ALGUID.Next();
-			MonoBehaviorFinder.Find<ResourceManager>("ResourceManager").ResourcePopulation.add(key, ri);
-
-			i.InstantiateResource(p.ResourcePrefab, newLocation, ri);
-
+			else if (LifeFinder.Distance(f, this.gameObject) < LifeFinder.Distance(closest, this.gameObject))
+			{
+				closest = f;
+			}
 
 		}
 
-		if(inRange.Count == 0)
+		Resource mate = null;
+		if(closest != null)
 		{
-
-
-
-
-			IGenome[] parents = {this.genome, this.genome};
-			IGenome child = this.Genome.Clone();
-			
-			
-			Vector3 here = this.transform.position;
-			Vector3 random = new Vector3(gen.Next((int)this.seedRadius), 0, gen.Next((int)this.seedRadius));
-			Vector3 newLocation = here + random;
-			
-			IIndividualFactory f = SimulationConstants.LifeAgentFactory;
-			IIndividual ri = f.construct(child);
-			Instantiator i = new Instantiator();
-			Prefabs p = MonoBehaviorFinder.Find<Prefabs>("Prefabs");
-
-			int key = ALGUID.Next();
-			MonoBehaviorFinder.Find<ResourceManager>("ResourceManager").ResourcePopulation.add(key, ri);
-			i.InstantiateResource(p.ResourcePrefab, newLocation, ri);
+			mate = closest.GetComponent<Resource>();
+		}
+		else
+		{
+			mate = this;
 		}
 
+		Vector3 position = new Vector3(this.transform.position.x + gen.Next((int)seedRadius), this.transform.position.y, this.transform.position.z + gen.Next((int)seedRadius));
+		ReproductionManager reproductionManager = MonoBehaviorFinder.Find<ReproductionManager>("ReproductionManager");
+		reproductionManager.ResourceReproduction(this.Id, mate.Id, position);
 
+		ResourceManager rm = MonoBehaviorFinder.Find<ResourceManager>("ResourceManager");
+		rm.Count++;
 
 	}
 
