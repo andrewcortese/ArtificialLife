@@ -80,7 +80,9 @@ public class SpotlightGUI : MonoBehaviour {
 	                			"Location: " + this.target.transform.position.ToString() + "\n" +
 								"Genome: " + resource.Genome.GenesToString() + "\n" +
 							"Photosynthesis Timer: " + pst.ToString() + "\n" +
-							"Energy: " + resource.Energy + " / " + resource.EnergyNeeded;
+							"Energy: " + resource.Energy + " / " + resource.EnergyNeeded + "\n" +
+							"Age: " + (int)resource.Age + "\n" +
+							"Lifespan: " + resource.Lifespan + "\n";
 
 								
 	                show = true;

@@ -128,6 +128,22 @@ namespace AssemblyCSharp
             }
         }
 
+		public static float ResourceEnergyHandicap
+		{
+			get
+			{
+				return 1f;
+			}
+		}
+
+		public static float PhotosynthesisHandicap
+		{
+			get
+			{
+				return 2f;
+			}
+		}
+
     }
 }
 

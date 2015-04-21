@@ -15,7 +15,9 @@ public class Resource : MonoBehaviour {
 	private int id;
 	private IIndividual individual;
 	System.Random gen;
-
+	private ITimer lifespanTimer;
+	private float age;
+	private float lifespan;
 
     public IGenome Genome
     {
@@ -71,6 +73,18 @@ public class Resource : MonoBehaviour {
 		}
 	}
 
+	public float Age {
+		get {
+			return age;
+		}
+	}
+
+	public float Lifespan {
+		get {
+			return lifespan;
+		}
+	}
+
     private void Initialize(SingleIntegerGenome genome)
     {
 		if(genome != null)
@@ -78,9 +92,12 @@ public class Resource : MonoBehaviour {
 			int[] values = this.genome.getGeneIntegerValues();
 			if(values.Length >= 3)
 			{
-				this.photosynthesisTimer = new Timer((values[0] + 1) *10f);
-				this.energyNeeded = (float)((values[1]+ 1)*4f);
+				this.photosynthesisTimer = new Timer((values[0] + 1) * SimulationConstants.PhotosynthesisHandicap);
+				this.energyNeeded = (float)((values[1]+ 1)* SimulationConstants.ResourceEnergyHandicap);
 				this.seedRadius = (float) (values[2] + 1) * 100f;
+				this.lifespan = (values[3] + 1)*TraitConstants.BaseLifeSpan;
+				this.lifespanTimer = new Timer(lifespan);
+				this.age = 0;
 			}
 			initialized = true;
 		}
@@ -114,6 +131,15 @@ public class Resource : MonoBehaviour {
 				this.Reproduce();
 				energy = 0;
 			}
+
+			if(lifespanTimer.Tick(Time.deltaTime))
+			{
+				this.Die();
+			}
+			else
+			{
+				this.age = lifespanTimer.CurrentTime;
+			}
         }
 	}
 
@@ -128,6 +154,15 @@ public class Resource : MonoBehaviour {
 		pm.ResourcePopulation.Remove(this.Id);
 		pm.Count --;
 		Debug.Log("Resource: " + this.Id +  "was eaten by " + killedBy);
+		GameObject.Destroy(this.gameObject);
+	}
+
+	public void Die()
+	{
+		ResourceManager pm = MonoBehaviorFinder.Find<ResourceManager>("ResourceManager");
+		pm.ResourcePopulation.Remove(this.Id);
+		pm.Count --;
+		Debug.Log("Resource: " + this.Id +  "died of old age");
 		GameObject.Destroy(this.gameObject);
 	}
 
@@ -180,8 +215,12 @@ public class Resource : MonoBehaviour {
 		{
 			mate = this;
 		}
-
-		Vector3 position = new Vector3(this.transform.position.x + gen.Next((int)seedRadius), this.transform.position.y, this.transform.position.z + gen.Next((int)seedRadius));
+		SimulationSpace s = SimulationConstants.SimSpace;
+		Vector3 position = Vector3.zero;
+		while((position.Equals(Vector3.zero)) || (s.IsInside(position) == false))
+		{
+			position = new Vector3(this.transform.position.x + gen.Next((int)seedRadius), this.transform.position.y, this.transform.position.z + gen.Next((int)seedRadius));
+		}
 		ReproductionManager reproductionManager = MonoBehaviorFinder.Find<ReproductionManager>("ReproductionManager");
 		reproductionManager.ResourceReproduction(this.Id, mate.Id, position);
 

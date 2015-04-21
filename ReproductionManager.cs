@@ -67,15 +67,8 @@ public class ReproductionManager : MonoBehaviour {
 			rm.Count++;
 
 		}
-		else
-		{
-			if(alertTimer.Tick(Time.deltaTime))
-			{
-				Debug.Log("Resource population limit reached");
 
-			}
-			this.numTimesLimitReached++;
-		}
+
 	}
 
 	/// <summary>

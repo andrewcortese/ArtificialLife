@@ -91,7 +91,7 @@ namespace GeneticAlgorithms
 
 		private float lifespan(int gene)
 		{
-			return gene*TraitConstants.BaseLifeSpan;
+			return ((gene+1)*TraitConstants.BaseLifeSpan);
 		}
 
 		private int preference(int gene)
