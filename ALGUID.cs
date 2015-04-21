@@ -10,8 +10,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace AssemblyCSharp
-{
+
+/// <summary>
+/// Don't use this class directly.
+/// Instead, instantiate an ALGUIDGenerator object and use that class.
+/// That class calls this class' methods.
+/// 
+/// This prevents clients from being dependent on a static implementation of GUI generation.
+/// If a new GUI generation implementation is needed, the change need only take place inside ALGUIDGenerator
+/// </summary>
 	public static class ALGUID
 	{
 		private static int next = 0;
@@ -34,5 +41,5 @@ namespace AssemblyCSharp
 			used.Add(val);
 		}
 	}
-}
+
 

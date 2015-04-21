@@ -54,6 +54,14 @@ namespace GeneticAlgorithms
 				traits.Diet = AgentDietType.Herbivore;
 			}
 
+			if(genesVals.Length >= 8)
+			{
+				traits.Strength = genesVals[7];
+			}
+			else
+			{
+				traits.Strength = 5;
+			}
 
 			return traits;
 					

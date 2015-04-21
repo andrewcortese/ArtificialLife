@@ -17,15 +17,31 @@ namespace AssemblyCSharp
         {
             get
             {
-                return 80;
+                return 200;
             }
         }
+
+		public static int StartingResourcePopulationSize
+		{
+			get
+			{
+				return 100;
+			}
+		}
+
+		public static int MaximumResourcePopulation
+		{
+			get
+			{
+				return 600;
+			}
+		}
 
         public static float squareSpaceMinPoint
         {
             get
             {
-                return 700.0f;
+                return 500.0f;
             }
         }
 
@@ -33,7 +49,7 @@ namespace AssemblyCSharp
         {
             get
             {
-                return 1500.0f;
+                return 1700.0f;
             }
         }
 
@@ -49,7 +65,7 @@ namespace AssemblyCSharp
         {
             get
             {
-                return 7f;
+                return 8f;
             }
         }
 
@@ -65,7 +81,7 @@ namespace AssemblyCSharp
         {
             get
             {
-                return 7;
+                return 8;
             }
         }
 

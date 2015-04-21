@@ -78,9 +78,9 @@ public class Resource : MonoBehaviour {
 			int[] values = this.genome.getGeneIntegerValues();
 			if(values.Length >= 3)
 			{
-				this.photosynthesisTimer = new Timer(values[0] *2f  + 1);
-				this.energyNeeded = (float)values[1] + 1;
-				this.seedRadius = (float) values[2] * 2f;
+				this.photosynthesisTimer = new Timer((values[0] + 1) *10f);
+				this.energyNeeded = (float)((values[1]+ 1)*4f);
+				this.seedRadius = (float) (values[2] + 1) * 100f;
 			}
 			initialized = true;
 		}
@@ -117,6 +117,11 @@ public class Resource : MonoBehaviour {
         }
 	}
 
+
+	/// <summary>
+	/// Method called by a predator to eat this Resource
+	/// </summary>
+	/// <param name="killedBy">Killed by.</param>
 	public void Eat(string killedBy)
 	{
 		ResourceManager pm = MonoBehaviorFinder.Find<ResourceManager>("ResourceManager");
@@ -124,9 +129,16 @@ public class Resource : MonoBehaviour {
 		pm.Count --;
 		Debug.Log("Resource: " + this.Id +  "was eaten by " + killedBy);
 		GameObject.Destroy(this.gameObject);
-		          }
+	}
 
-	void Reproduce()
+
+	/// <summary>
+	/// Reproduction logic.
+	/// Search for potential mates within the seed radius.
+	/// If there are any, mate with the closest.
+	/// Otherwise, undergo asexual reproduction.
+	/// </summary>
+	private void Reproduce()
 	{
 		ICrossover crossover = new RandomCrossover();
 
@@ -174,7 +186,7 @@ public class Resource : MonoBehaviour {
 		reproductionManager.ResourceReproduction(this.Id, mate.Id, position);
 
 		ResourceManager rm = MonoBehaviorFinder.Find<ResourceManager>("ResourceManager");
-		rm.Count++;
+
 
 	}
 

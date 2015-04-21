@@ -51,6 +51,9 @@ public class PopulationManager : MonoBehaviour {
 	
 	}
 
+	/// <summary>
+	/// Generates the initial population
+	/// </summary>
 	private void GeneratePopulation()
 	{
 		IIndividualFactory individualFactory = SimulationConstants.LifeAgentFactory;
@@ -66,13 +69,22 @@ public class PopulationManager : MonoBehaviour {
         }
 	}
 
+	/// <summary>
+	/// Instantiates a life agent.
+	/// </summary>
+	/// <returns>The life agent.</returns>
+	/// <param name="i">The index.</param>
+	/// <param name="position">Position.</param>
 	private GameObject InstantiateLifeAgent(IIndividual i, Vector3 position)
 	{
 		Instantiator instantiator = new Instantiator();
 		return instantiator.InstantiateLifeAgent(this.lifeAgentPrefab, position, i);
 	}
 	
-
+	/// <summary>
+	/// Get a random x,y,z position within the Simulation Space
+	/// </summary>
+	/// <returns>The position as a 3D vector</returns>
 	private Vector3 randomPosition()
 	{
 		SimulationSpace space = SimulationConstants.SimSpace;

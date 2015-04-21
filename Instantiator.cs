@@ -28,8 +28,8 @@ namespace AssemblyCSharp
 			lifeAgent.AgentIndividual = (LifeAgentIndividual) individual;
 
             fixHeight(lifeAgentGO);
-            GeneShapeMap g = new GeneShapeMap();
-            lifeAgentGO = g.GetModelFromGenes(individual.getGenome(), lifeAgentGO);
+//            GeneShapeMap g = new GeneShapeMap();
+//            lifeAgentGO = g.GetModelFromGenes(individual.getGenome(), lifeAgentGO);
 			LifeData data = lifeAgentGO.AddComponent<LifeData>();
 			data.Domain = LifeDomain.LifeAgent;
           
@@ -64,6 +64,11 @@ namespace AssemblyCSharp
 			return resourceGO;
 		}
 
+		/// <summary>
+		/// General instantiation wrapper for the static GameObject.Instantiate class
+		/// </summary>
+		/// <param name="prefab">Prefab.</param>
+		/// <param name="position">Position.</param>
 		public GameObject Instantiate (GameObject prefab, Vector3 position)
 		{
 			GameObject go = (GameObject)GameObject.Instantiate(prefab, position, Quaternion.identity);
@@ -76,6 +81,11 @@ namespace AssemblyCSharp
 
 		}
 
+		/// <summary>
+		/// Give all instantiated gameobjects a uniform Y-position
+		/// </summary>
+		/// <returns>The height.</returns>
+		/// <param name="go">Go.</param>
         public GameObject fixHeight(GameObject go)
         {
             Vector3 pos = go.transform.position;

@@ -24,6 +24,7 @@ namespace GeneticAlgorithms
 			this.pathfindingStrategy = pathfindingStrategy;
             this.intelligence = 10;
 			this.Diet = AgentDietType.Herbivore;
+			this.Strength = 5;
 		}
 
         public Traits (float speed, float perceptionRadius, float maxLifespan, int resourcesNeeded, int matePreferenceValue, int intelligence)
@@ -36,6 +37,7 @@ namespace GeneticAlgorithms
             this.pathfindingStrategy = StrategyType.Naive;
             this.intelligence = intelligence;
 			this.Diet = AgentDietType.Herbivore;
+			this.Strength = 5;
         }
 
 		public Traits (float speed, float perceptionRadius, float maxLifespan, int resourcesNeeded, int matePreferenceValue, int intelligence, AgentDietType diet)
@@ -48,6 +50,20 @@ namespace GeneticAlgorithms
 			this.pathfindingStrategy = StrategyType.Naive;
 			this.intelligence = intelligence;
 			this.Diet = diet;
+			this.Strength = 5;
+		}
+
+		public Traits (float speed, float perceptionRadius, float maxLifespan, int resourcesNeeded, int matePreferenceValue, int intelligence, AgentDietType diet, int strength)
+		{
+			this.speed = speed;
+			this.perceptionRadius = perceptionRadius;
+			this.maxLifespan = maxLifespan;
+			this.resourcesNeeded = resourcesNeeded;
+			this.matePreferenceValue = matePreferenceValue;
+			this.pathfindingStrategy = StrategyType.Naive;
+			this.intelligence = intelligence;
+			this.Diet = diet;
+			this.Strength = strength;
 		}
 		public Traits()
 		{
@@ -62,6 +78,7 @@ namespace GeneticAlgorithms
 		private int matePreferenceValue;
 		private StrategyType pathfindingStrategy;
         private int intelligence;
+		private int strength;
 
 		public float Speed {
 			get {
@@ -135,6 +152,15 @@ namespace GeneticAlgorithms
                 this.intelligence = value;
             }
         }
+
+		public int Strength {
+			get {
+				return strength;
+			}
+			set {
+				strength = value;
+			}
+		}
 	}
 }
 

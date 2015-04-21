@@ -7,12 +7,16 @@ public class ReproductionManager : MonoBehaviour {
 
 	Instantiator instantiator;
 	Prefabs prefabs;
+	private int numTimesLimitReached;
+	Timer alertTimer;
 
 	// Use this for initialization
 	void Start () {
 	
 		instantiator = new Instantiator();
 		prefabs = MonoBehaviorFinder.Find<Prefabs>("Prefabs");
+		numTimesLimitReached = 0;
+		alertTimer = new Timer(5f);
 	}
 	
 	// Update is called once per frame
@@ -49,14 +53,29 @@ public class ReproductionManager : MonoBehaviour {
 	/// <param name="position">Position.</param>
 	public void ResourceReproduction(int id1, int id2, Vector3 position)
 	{
+
 		ResourceManager rm = MonoBehaviorFinder.Find<ResourceManager>("ResourceManager");
-		IIndexedPopulation resources = rm.ResourcePopulation;
 
-		IIndividual i = this.DoCrossover(id1, id2, resources);
-		rm.Add(i);
+		if(rm.Count < SimulationConstants.MaximumResourcePopulation)
+		{
+			IIndexedPopulation resources = rm.ResourcePopulation;
 
-		this.instantiator.InstantiateResource(prefabs.ResourcePrefab, position, i);
+			IIndividual i = this.DoCrossover(id1, id2, resources);
+			rm.Add(i);
 
+			this.instantiator.InstantiateResource(prefabs.ResourcePrefab, position, i);
+			rm.Count++;
+
+		}
+		else
+		{
+			if(alertTimer.Tick(Time.deltaTime))
+			{
+				Debug.Log("Resource population limit reached");
+
+			}
+			this.numTimesLimitReached++;
+		}
 	}
 
 	/// <summary>

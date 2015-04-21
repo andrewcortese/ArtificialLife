@@ -22,7 +22,7 @@ public class ResourceManager : MonoBehaviour {
 		this.resourceSpawnTimer = new Timer(SimulationConstants.ResourceSpawnTime);
         Prefabs prefabs = UnityObjectFinders.MonoBehaviorFinder.Find<Prefabs>("Prefabs");
         this.resourcePrefab = prefabs.ResourcePrefab;
-		this.resourcePopulation = new IndexedPopulation(SimulationConstants.StartingPopulationSize, SimulationConstants.LifeAgentFactory, new ALGUIDGenerator());
+		this.resourcePopulation = new IndexedPopulation(SimulationConstants.StartingResourcePopulationSize, SimulationConstants.LifeAgentFactory, new ALGUIDGenerator());
 		count = 0;
 		List<IIndividual> list = this.resourcePopulation.getIterator();
 		foreach(IIndividual i in list)

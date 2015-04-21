@@ -15,6 +15,8 @@ namespace GeneticAlgorithms
         int Intelligence{get; set;}
 
 		AgentDietType Diet{get; set;}
+
+		int Strength{get; set;}
             
     }
 }

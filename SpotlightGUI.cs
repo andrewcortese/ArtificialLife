@@ -62,7 +62,8 @@ public class SpotlightGUI : MonoBehaviour {
 	                            "Perception Radius: " + traits.PerceptionRadius + " units.\n" +
 	                            "Resources: " + agent.currentResources + " / " + traits.ResourcesNeeded + "\n" +
 	                            "Intelligence: " + traits.Intelligence + "\n" +
-	                            "Diet: " + traits.Diet + "\n" + 
+	                            "Strength: " + traits.Strength + "\n" +
+	                            "Diet: " + traits.Diet + "\n" +
 	                            "Target: " + targetOfTarget.name;
 	                        
 
@@ -92,7 +93,7 @@ public class SpotlightGUI : MonoBehaviour {
     {
         if(show)
         {
-            Rect rect = new Rect(50, 200, 300, 200);
+            Rect rect = new Rect(50, 200, 300, 250);
 
             GUI.Box(rect, this.text);
         }

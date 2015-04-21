@@ -87,6 +87,14 @@ public class LifeAgent : MonoBehaviour {
             this.targetRefreshTime = 10 - traits.Intelligence;
             this.targetRefreshTimer = new Timer(this.targetRefreshTime);
 			this.diet = agentIndividual.getTraits().Diet;
+			Debug.Log(diet.ToString());
+
+			//set the mesh renderer's color based on the Agent's diet
+			this.GetComponent<MeshRenderer>().material.color = this.SetColor(this.diet);
+		
+
+
+
 		}
 
 	}
@@ -118,12 +126,12 @@ public class LifeAgent : MonoBehaviour {
                 Die();
             }
 
-			HerbivoreBehavior();
+			GeneralBehavior();
 		}
 	}
 
 
-	void HerbivoreBehavior()
+	void GeneralBehavior()
 	{
 		//control the state machine's state
 		SetMode();
@@ -132,7 +140,7 @@ public class LifeAgent : MonoBehaviour {
 		LifeDomain targetDomain = GetTargetDomain();
 		
 		//move to (and interact with) the target
-		MoveToTargetAndInteract (targetDomain);
+		MoveToTargetAndInteract (targetDomain, this.mode);
 	}
 
 	/// <summary>
@@ -202,19 +210,22 @@ public class LifeAgent : MonoBehaviour {
     LifeDomain GetTargetDomain()
     {
 		LifeDomain targetDomain;
-        if (mode == AgentMode.GatherResource)
+        if (mode == AgentMode.GatherResource && this.diet == AgentDietType.Herbivore)
         {
 			targetDomain = LifeDomain.Resource;
         }
+        else if (mode == AgentMode.FindMate)
+        {
+				targetDomain = LifeDomain.Resource;
+        }
+		else if(mode == AgentMode.GatherResource && (this.diet == AgentDietType.Carnivore || this.diet == AgentDietType.Omnivore))
+		{
+			targetDomain = LifeDomain.LifeAgent;
+		}
         else
-            if (mode == AgentMode.FindMate)
-            {
+        {
 				targetDomain = LifeDomain.Resource;
-            }
-            else
-            {
-				targetDomain = LifeDomain.Resource;
-            }
+        }
 		return targetDomain;
     }
 
@@ -226,7 +237,7 @@ public class LifeAgent : MonoBehaviour {
     /// Note: maybe not as cohesive as possible, but allows us to handle all targets similarly (good tradeoff, but not perfect)
     /// </summary>
     /// <param name="targetTagName">the tag for the target</param>
-	void MoveToTargetAndInteract(LifeDomain targetDomain)
+	void MoveToTargetAndInteract(LifeDomain targetDomain, AgentMode currentMode)
 	{
         //if we currently have no target, or it's time to try again, then try to find a target
 		if(target == null || IsTimeToRefreshTarget())
@@ -235,17 +246,21 @@ public class LifeAgent : MonoBehaviour {
 			List<GameObject> candidates1 = LifeFinder.FindAllWithDomain(targetDomain);
             List<GameObject> candidates = null;
 
-            //if we're in FindMate mode, remove ourself as a candidate
-            if(mode == AgentMode.FindMate)
+            //if we're in FindMate mode can't mate with self.
+			//Similarly, if we're a Carnivore, can't eat self.
+            if(mode == AgentMode.FindMate || this.diet == AgentDietType.Carnivore || this.diet == AgentDietType.Omnivore)
             {
                 candidates = new List<GameObject>();
                 foreach(GameObject g in candidates1)
                 {
                     LifeAgent other = (LifeAgent) g.GetComponent<LifeAgent>();
-                    if(this.id != other.id)
-                    {
-                        candidates.Add(g);
-                    }
+					if(other != null)
+					{
+                    	if(this.id != other.id)
+                    	{
+                        	candidates.Add(g);
+                    	}
+					}
                 }
             }
 
@@ -303,20 +318,22 @@ public class LifeAgent : MonoBehaviour {
             pos = new Vector3(pos.x, 0, pos.z);
             targetPos = new Vector3(targetPos.x, 0, targetPos.z);
 
+			GameObjectIdentifier identifier = new GameObjectIdentifier();
+
 			if(Vector3.Distance(pos, targetPos) <= 1)
 			{
-                if(isResource(target))
+                if(identifier.IsResource(target))
                 {
     				this.currentResources++;
     				target.GetComponent<Resource>().Eat("Agent: " + this.id);
     				target = null;
                 }
-                else if(isWaypoint(target))
+                else if(identifier.IsWaypoint(target))
                 {
                     GameObject.Destroy(target);
                     target = null;
                 }
-                else if(isLifeAgent(target))
+                else if(identifier.IsLifeAgent(target) && currentMode == AgentMode.FindMate)
                 {
                     LifeAgent potentialMate = (LifeAgent)target.GetComponent<LifeAgent>();
                     if(potentialMate != null)
@@ -331,6 +348,20 @@ public class LifeAgent : MonoBehaviour {
                         }
                     }
                 }
+				else if(identifier.IsLifeAgent(target) && currentMode == AgentMode.GatherResource)
+				{
+					LifeAgent agentToEat = target.GetComponent<LifeAgent>();
+					if(this.traits.Strength > agentToEat.Traits.Strength)
+					{
+						this.currentResources ++;
+						agentToEat.Kill(this.gameObject.name);
+						target = null;
+					}
+					else
+					{
+						target = null;
+					}
+				}
 			}
 			else
 			{
@@ -358,41 +389,35 @@ public class LifeAgent : MonoBehaviour {
         }
     }
 
-
-
-    bool isResource(GameObject other)
-    {
-		if(other != null && other.CompareTag(Tags.Life))
-        {
-			return (getDomain(other) == LifeDomain.Resource);
-        }
-        else return false;
-    }
-    bool isLifeAgent(GameObject other)
-    {
-		if(other != null && other.CompareTag(Tags.Life))
-        {
-			return (getDomain(other) == LifeDomain.LifeAgent);
-        }
-        else return false;
-    }
-    bool isWaypoint(GameObject other)
-    {
-        if(other != null)
-        {
-            return other.name.Equals("WanderTarget");
-        }
-        else return false;
-    }
-
-	LifeDomain getDomain(GameObject other)
+	/// <summary>
+	/// Procedure to set the color based on the diet
+	/// </summary>
+	Color SetColor (AgentDietType dietType)
 	{
-		if(other != null)
+		Color color;
+		if (dietType == AgentDietType.Carnivore) 
 		{
-			return other.GetComponent<LifeData>().Domain;
+			color = Color.red;
 		}
-		else return LifeDomain.None;
+		else if (dietType == AgentDietType.Herbivore) 
+		{
+			color = Color.blue;
+		}
+		else if (dietType == AgentDietType.Omnivore) 
+		{
+			color = Color.yellow;
+		}
+		else
+		{
+			color = SetColor(AgentDietType.Herbivore);
+		}
+
+		return color;
+
 	}
+
+
+    
 }
 
 
