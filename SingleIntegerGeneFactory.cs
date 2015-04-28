@@ -1,7 +1,6 @@
 using System;
 
-namespace GeneticAlgorithms
-{
+
 	public class SingleIntegerGeneFactory : IGeneFactory
 	{
         private Random r;
@@ -37,5 +36,5 @@ namespace GeneticAlgorithms
 			return gene;
 		}
 	}
-}
+
 

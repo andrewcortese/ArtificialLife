@@ -9,12 +9,11 @@
 // ------------------------------------------------------------------------------
 using System;
 using AssemblyCSharp;
-namespace GeneticAlgorithms
-{
+
 	public interface IIndividualFactory
 	{
 		IIndividual construct(IGenome genome);
 		IIndividual constructRandom();
 	}
-}
+
 

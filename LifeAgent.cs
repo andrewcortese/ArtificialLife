@@ -367,6 +367,7 @@ public class LifeAgent : MonoBehaviour {
 			{
 				this.transform.LookAt(target.transform.position);
 				this.transform.Translate(Vector3.forward * Time.deltaTime * ((Traits)this.traits).Speed);
+			
 			}
 		}
 	}

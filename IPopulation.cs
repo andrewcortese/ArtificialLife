@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-namespace GeneticAlgorithms
-{
+
 	public interface IPopulation
 	{
 		IIndividual get(int index);
@@ -11,5 +10,5 @@ namespace GeneticAlgorithms
 		IPopulation clone();
 
 	}
-}
+
 

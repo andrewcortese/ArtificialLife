@@ -13,8 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
-namespace AssemblyCSharp
-{
+
 	/// <summary>
 	/// Class to serve as a collection of IIndividuals that can be looked by by their GUID.
 	/// 
@@ -135,5 +134,5 @@ namespace AssemblyCSharp
 			return (IPopulation)this.MemberwiseClone();
 		}
 		}
-}
+
 

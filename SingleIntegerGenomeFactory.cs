@@ -10,8 +10,7 @@
 using System;
 using GeneticAlgorithms;
 
-namespace AssemblyCSharp
-{
+
 	public class SingleIntegerGenomeFactory : IGenomeFactory
 	{
 		public IGenome construct(IGene[] genes)
@@ -38,5 +37,5 @@ namespace AssemblyCSharp
 			return this.construct(genes);
 		}
 	}
-}
+
 

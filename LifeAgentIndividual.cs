@@ -9,8 +9,7 @@
 // ------------------------------------------------------------------------------
 using System;
 using GeneticAlgorithms;
-namespace AssemblyCSharp
-{
+
 	public class LifeAgentIndividual : IIndividual
 	{
 		IGenome genome;
@@ -53,5 +52,5 @@ namespace AssemblyCSharp
 			return lai;
 		}
 	}
-}
+
 

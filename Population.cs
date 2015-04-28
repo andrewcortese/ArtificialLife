@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-namespace GeneticAlgorithms
-{
+
 	public class Population : IPopulation
 	{
 		private List<IIndividual> members;
@@ -101,5 +100,5 @@ namespace GeneticAlgorithms
 			return populationString;
 		}
 	}
-}
+
 

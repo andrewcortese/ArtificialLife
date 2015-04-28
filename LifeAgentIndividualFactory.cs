@@ -9,8 +9,7 @@
 // ------------------------------------------------------------------------------
 using System;
 using GeneticAlgorithms;
-namespace AssemblyCSharp
-{
+
 	/// <summary>
 	/// Factory class for initializing LifeAgentIndividual objects.
 	/// </summary>
@@ -66,5 +65,5 @@ namespace AssemblyCSharp
 		}
 			
 	}
-}
+
 

@@ -1,7 +1,6 @@
 using System;
 
-namespace GeneticAlgorithms
-{
+
 	public class RandomCrossover : ICrossover
 	{
 		IMatchValidator matchValidator = new MatchValidator();
@@ -35,5 +34,5 @@ namespace GeneticAlgorithms
 			return child;
 		}
 	}
-}
+
 
